@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTheme } from '../context/ThemeContext';
 import {
     Bell,
@@ -13,6 +13,11 @@ import {
 function Header() {
     const { theme, toggleTheme } = useTheme();
     const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+    const [searchQuery,setSearchQuery] = useState('')
+    useEffect(()=>{
+        console.log(searchQuery);
+        
+    },[searchQuery])
     return (
         <header className={`${theme==='dark'?'bg-[#0d1425]/80':''}backdrop-blur-xl border-b border-cyan-500/20 px-6 py-4 flex items-center gap-4 relative z-10`}>
             <button
@@ -26,6 +31,7 @@ function Header() {
                 <div className="relative">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={20} />
                     <input
+                        onChange={(e)=>setSearchQuery(e.target.value)}
                         type="text"
                         placeholder="Search tickets, engineers, or issues..."
                         className={`w-full pl-12 pr-4 py-3 ${theme==='dark'?'bg-[#151b2e]':''} border border-cyan-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-all`}

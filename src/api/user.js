@@ -7,7 +7,7 @@ export const register = async (payload) => {
 
 export const login = async (payload) => {
   const response = await api.post("/users/token", payload);
-  return response.data;
+  return response;
 };
 
 export const logout = () => {

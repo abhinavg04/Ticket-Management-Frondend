@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 
 const Login = () => {
-    const nav = useNavigate()
+  const nav = useNavigate()
   const [userData, setuserData] = useState({
     username: '',
     password: '',
@@ -26,7 +26,7 @@ const Login = () => {
     const newErrors = {};
     if (!userData.username) {
       newErrors.username = 'Username is required';
-    } 
+    }
     if (!userData.password) {
       newErrors.password = 'Password is required';
     }
@@ -35,29 +35,40 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validateForm();
+    setErrors(newErrors);
+
+    // 🚨 STOP if validation fails
+    if (Object.keys(newErrors).length > 0) {
+      return;
+    }
 
     setIsLoading(true);
     const formData = new FormData()
     console.log(userData)
-    formData.append('username',userData.username)
-    formData.append('password',userData.password)
-    try{
+    formData.append('username', userData.username)
+    formData.append('password', userData.password)
+    try {
       const res = await login(formData)
-      localStorage.setItem('token',res.access_token)
-      toast.success(`Welcome back`)
-      nav('/dashboard');
-    }
-    catch(e){
-      errors.username = e.response.data.detail;
+      if (res.status == 401){
+        toast.error("Login credential incorrect")
+      }
+      console.log(res);
       
-      
+      if (res.status == 200){
+        localStorage.setItem('token', res.data.access_token)
+        toast.success(`Welcome back`)
+        nav('/dashboard');
+      }
     }
-    finally{
+    catch (e) {
+      toast.error("Login Failed")
+    }
+    finally {
 
       setIsLoading(false)
     }
-    
-    
+
+
   };
 
   return (
@@ -155,7 +166,7 @@ const Login = () => {
       {/* Main card */}
       <div className="relative z-10 w-full max-w-md">
         <div className="glow-border rounded-2xl backdrop-blur-xl p-8 shadow-2xl animate-slide-up">
-          
+
           {/* Header */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-linear-to-br from-cyan-500 to-emerald-500 mb-4 shadow-lg shadow-cyan-500/50">
@@ -179,7 +190,6 @@ const Login = () => {
               <input
                 type="username"
                 name="username"
-                value={userData.username}
                 onChange={handleChange}
                 className="w-full px-4 py-3 bg-[#151b2e] border border-cyan-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-all duration-300"
                 style={{ fontFamily: 'Space Mono, monospace' }}
@@ -201,7 +211,6 @@ const Login = () => {
               <input
                 type="password"
                 name="password"
-                value={userData.password}
                 onChange={handleChange}
                 className="w-full px-4 py-3 bg-[#151b2e] border border-cyan-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-all duration-300"
                 style={{ fontFamily: 'Space Mono, monospace' }}

@@ -51,7 +51,9 @@ function Sidebar() {
                         <Home size={20} />
                         <span>Overview</span>
                     </NavLink>
-                    <NavLink
+                    {
+                        ["admin"].includes(user.role) && (
+                            <NavLink
                                 to={'/dashboard/all-tickets'}
                                 end
                                 className={navItemClass}
@@ -63,6 +65,8 @@ function Sidebar() {
                                     {stats.totalTickets}
                                 </span>
                             </NavLink>
+                        )
+                    }
 
                     {/* {
                         ["user", "engineer"].includes(user.role) && (
@@ -88,8 +92,8 @@ function Sidebar() {
                         <Plus size={20} />
                         Create Ticket
                     </NavLink>
-                     <NavLink
-                     to={'/dashboard/assigned-tickets'}
+                    <NavLink
+                        to={'/dashboard/assigned-tickets'}
                         className={navItemClass}
                         style={{ fontFamily: 'Space Mono, monospace', animationDelay: '0.3s' }}
                     >
