@@ -10,12 +10,14 @@ import Unauthorized from "./pages/UnAuthorized";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { ThemeProvider } from "./context/ThemeContext";
 import AssignedTickets from "./pages/AssignedTickets";
+import ManageUser from "./pages/ManageUser";
+import NotFound from "./components/NotFound";
 function App() {
   const router = createBrowserRouter([
     { path: "/", element: <Login /> },
     { path: "/reg", element: <Register /> },
     { path: "/unauthorized", element: <Unauthorized /> },
-
+    {path: "*", element: <NotFound />},
     {
       path: "/dashboard",
       element: <HomePage />,
@@ -35,6 +37,12 @@ function App() {
           element: <ProtectedRoute roles={["admin","user"]}/>,
           children: [
             { path: "create-tickets", element: <CreateTicket /> },
+          ],
+        },
+        {
+          element: <ProtectedRoute roles={["admin"]}/>,
+          children: [
+            { path: "manage-users", element: <ManageUser /> },
           ],
         },
         // 👤 ANY AUTH USER

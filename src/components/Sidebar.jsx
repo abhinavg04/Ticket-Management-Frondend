@@ -2,7 +2,8 @@ import {
     FileText,
     Home,
     Plus,
-    BarChart3
+    BarChart3,
+    Users
 } from 'lucide-react';
 import { NavLink } from 'react-router';
 import Logo from './Logo';
@@ -51,7 +52,9 @@ function Sidebar() {
                         <Home size={20} />
                         <span>Overview</span>
                     </NavLink>
-                    <NavLink
+                    {
+                        ["admin"].includes(user.role) && (
+                            <NavLink
                                 to={'/dashboard/all-tickets'}
                                 end
                                 className={navItemClass}
@@ -63,6 +66,8 @@ function Sidebar() {
                                     {stats.totalTickets}
                                 </span>
                             </NavLink>
+                        )
+                    }
 
                     {/* {
                         ["user", "engineer"].includes(user.role) && (
@@ -88,32 +93,37 @@ function Sidebar() {
                         <Plus size={20} />
                         Create Ticket
                     </NavLink>
-                     <NavLink
-                     to={'/dashboard/assigned-tickets'}
+                    <NavLink
+                        to={'/dashboard/assigned-tickets'}
+                        end
                         className={navItemClass}
                         style={{ fontFamily: 'Space Mono, monospace', animationDelay: '0.3s' }}
                     >
                         <BarChart3 size={20} />
                         <span>Assigned Tickets</span>
                     </NavLink>
-
-                    {/*
-
-                    <NavLink
+                    {/* <NavLink
                         className={navItemClass}
                         style={{ fontFamily: 'Space Mono, monospace', animationDelay: '0.4s' }}
                     >
                         <Network size={20} />
-                        <span>Network Status</span>
-                    </NavLink>
+                        <span>Manage User</span>
+                    </NavLink> */}
 
-                    <NavLink
-                        className={navItemClass}
-                        style={{ fontFamily: 'Space Mono, monospace', animationDelay: '0.5s' }}
-                    >
-                        <Users size={20} />
-                        <span>Team</span>
-                    </NavLink>
+                    {
+                        ["admin"].includes(user.role) && (<NavLink
+                            to={'/dashboard/manage-users'}
+                            end
+                            className={navItemClass}
+                            style={{ fontFamily: 'Space Mono, monospace', animationDelay: '0.5s' }}
+                        >
+                            <Users size={20} />
+                            <span>users</span>
+                        </NavLink>)
+                    }
+                    {/*
+
+                   
 
                     <NavLink
 

@@ -12,28 +12,35 @@ import {
 import { createTicket } from "../api/ticket";
 import { getAllUser } from "../api/user";
 import { useUser } from "../context/UserContext";
+import { toast } from "react-toastify";
 
 const CreateTicket = () => {
   const [formData, setFormData] = useState({
-    reported_by:"",
     issue_description:"",
-    assigned_to: "",
+    assigned_to_id: "",
     priority: "Medium",
     status:"Open",
     category: "",
   });
-  const { user } = useUser();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     
   };
   const [users,setUsers] = useState([])
-
+  const clearForm = ()=>{
+    setFormData({
+    issue_description:"",
+    assigned_to_id: "",
+    priority: "Medium",
+    status:"Open",
+    category: "",
+  })
+  }
 useEffect(() => {
+  
   const fetchUsers = async () => {
     try {
       const res = await getAllUser();
-      console.log(res)
       setUsers(res);
     } catch (error) {
         console.error(error);
@@ -48,14 +55,13 @@ console.log(users)
   const handleSubmit = async (e) => {
     e.preventDefault();
     try{
-        formData.reported_by = user.id
         console.log(formData);
         
         const res = await createTicket(formData);
-        console.log(res);
+        toast.success(`Ticket ${res.ticket_id} Created Successfully`)
     }
     catch{
-
+      toast.error("Some Error Occured")
     }
   };
 
@@ -158,7 +164,6 @@ console.log(users)
                 <option>Low</option>
                 <option>Medium</option>
                 <option>High</option>
-                <option>Critical</option>
               </select>
             </div>
 
@@ -168,8 +173,8 @@ console.log(users)
                 <User size={16} /> Assign To
               </label>
                <select
-                name="assigned_to"
-                value={formData.assigned_to}
+                name="assigned_to_id"
+                value={formData.assigned_to_id}
                 onChange={handleChange}
                 className="w-full px-4 py-3 bg-[#151b2e] border border-cyan-500/30 rounded-lg text-white"
                 style={{ fontFamily: "Space Mono, monospace" }}
@@ -203,6 +208,7 @@ console.log(users)
           {/* Actions */}
           <div className="flex justify-end gap-4 pt-4">
             <button
+            onClick={clearForm}
               type="button"
               className="px-6 py-3 bg-[#151b2e] border border-cyan-500/30 text-gray-400 rounded-lg hover:border-cyan-400"
             >

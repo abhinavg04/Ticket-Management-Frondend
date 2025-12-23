@@ -4,17 +4,16 @@ import { getCurrentUser } from "../api/user";
 const UserContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({});
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const data = await getCurrentUser();
-        console.log(data);
         setUser(data);
       } catch (error) {
         console.error("Failed to fetch user", error);
-        setUser(null);
+        setUser({});
       }
     };
 

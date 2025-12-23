@@ -2,9 +2,11 @@ import React from 'react'
 import { LogOut } from 'lucide-react'
 import { logout } from '../api/user';
 import { useNavigate } from 'react-router';
+import { useUser } from '../context/UserContext';
 
 function UserProfile() {
-    const nav = useNavigate()
+    const { user } = useUser()
+     const nav = useNavigate()
     const logout_user = () => {
         logout()
         nav('/')
@@ -17,10 +19,10 @@ function UserProfile() {
                 </div>
                 <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-gray-200" style={{ fontFamily: 'Space Mono, monospace' }}>
-                        John Smith
+                        {user.username}
                     </p>
                     <p className="text-xs text-gray-500 truncate" style={{ fontFamily: 'Space Mono, monospace' }}>
-                        Network Engineer
+                        { user.role }
                     </p>
                 </div>
                 <button onClick={logout_user} className="text-gray-400 hover:text-cyan-400 transition-colors">

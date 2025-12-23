@@ -1,6 +1,5 @@
 import { useUser } from "../context/UserContext";
 import { Navigate,Outlet } from "react-router";
-import { toast } from "react-toastify";
 const ProtectedRoute = ({ roles, children }) => {
   const { user } = useUser();
   if (!user) {
@@ -8,11 +7,9 @@ const ProtectedRoute = ({ roles, children }) => {
   }
 
   if (roles && !roles.includes(user.role)) {
-    toast.error("You are not authorized!");
     return <Navigate to="/unauthorized" replace />;
   }
-
-    return <Outlet />;
+  return <Outlet />;
 };
 
 export default ProtectedRoute;
