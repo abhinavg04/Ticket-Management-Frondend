@@ -48,12 +48,7 @@ const Login = () => {
     formData.append('username', userData.username)
     formData.append('password', userData.password)
     try {
-      const res = await login(formData)
-      if (res.status == 401){
-        toast.error("Login credential incorrect")
-      }
-      console.log(res);
-      
+      const res = await login(formData)   
       if (res.status == 200){
         localStorage.setItem('token', res.data.access_token)
         toast.success(`Welcome back`)
@@ -64,7 +59,6 @@ const Login = () => {
       toast.error("Login Failed")
     }
     finally {
-
       setIsLoading(false)
     }
 

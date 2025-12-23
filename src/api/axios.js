@@ -14,14 +14,13 @@ api.interceptors.request.use((config) => {
 });
 
 
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-      window.location.href = "/";
+axios.interceptors.response.use(
+  res => res,
+  err => {
+    if (err.response?.status === 401) {
+      // just reject, DO NOT redirect
     }
-    return Promise.reject(error);
+    return Promise.reject(err);
   }
 );
 

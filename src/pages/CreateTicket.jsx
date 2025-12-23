@@ -22,7 +22,6 @@ const CreateTicket = () => {
     status:"Open",
     category: "",
   });
-  const { user } = useUser();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     
@@ -38,6 +37,7 @@ const CreateTicket = () => {
   })
   }
 useEffect(() => {
+  
   const fetchUsers = async () => {
     try {
       const res = await getAllUser();
@@ -164,7 +164,6 @@ console.log(users)
                 <option>Low</option>
                 <option>Medium</option>
                 <option>High</option>
-                <option>Critical</option>
               </select>
             </div>
 

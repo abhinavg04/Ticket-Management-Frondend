@@ -4,15 +4,26 @@ export const createTicket = async (payload) => {
     const response = await api.post("/tickets", payload)
     return response.data
 }
-export const getAllTickets = async () => {
-    const res = await api.get("/tickets")
-    return res.data
-}
+export const getAllTickets = async (limit = null, status = null, priority = null) => {
+  const res = await api.get("/tickets", {
+    params: {
+      ...(status && { status }),
+      ...(priority && { priority }),
+      ...(limit && { limit }),
+    }
+  });
+  return res.data;
+};
 
-export const getAssignedTicket = async () => {
-    const res = await api.get("/tickets/assigned/me");
-    return res.data
-}
+export const getAssignedTicket = async (status = null, priority = null) => {
+  const res = await api.get("/tickets/assigned/me", {
+    params: {
+      ...(status && { status }),
+      ...(priority && { priority }),
+    }
+  });
+  return res.data;
+};
 
 export const exportTickets = async (q) => {
     const response = await api.get(`/tickets/export?q=${q}`, {
@@ -37,7 +48,7 @@ export const exportTickets = async (q) => {
     a.remove();
     window.URL.revokeObjectURL(url);
 };
-export const updateTicket = async (ticket_id,payload)=>{
-    const res = await api.put(`/tickets/${ticket_id}`,payload)
+export const updateTicket = async (ticket_id, payload) => {
+    const res = await api.put(`/tickets/${ticket_id}`, payload)
     return res.data
 }

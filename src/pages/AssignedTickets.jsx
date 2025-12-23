@@ -30,15 +30,6 @@ const AssignedTickets = () => {
   const [selectedTicket, setSelectedTicket] = useState(null);
 
   const [tickets, setTickets] = useState([]);
-  useEffect(() => {
-    const fetchTickets = async () => {
-      const res = await getAssignedTicket()
-      setTickets(res)
-      console.log(res);
-      
-    }
-    fetchTickets()
-  }, [])
 
 
   // Sample tickets data - replace with your API data
@@ -95,43 +86,22 @@ const AssignedTickets = () => {
     }
   };
 
-  //   const filterTickets = () => {
-  //     return tickets.filter(ticket => {
-  //       const matchesSearch = ticket.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //                            ticket.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //                            ticket.category.toLowerCase().includes(searchQuery.toLowerCase());
 
-  //       const matchesPriority = selectedPriority === 'all' || ticket.priority.toLowerCase() === selectedPriority.toLowerCase();
-  //       const matchesStatus = selectedStatus === 'all' || ticket.status.toLowerCase() === selectedStatus.toLowerCase();
-
-  //       return matchesSearch && matchesPriority && matchesStatus;
-  //     }).sort((a, b) => {
-  //       let comparison = 0;
-  //       if (sortBy === 'date') {
-  //         comparison = new Date(a.created) - new Date(b.created);
-  //       } else if (sortBy === 'priority') {
-  //         const priorityOrder = { critical: 0, high: 1, medium: 2, low: 3 };
-  //         comparison = priorityOrder[a.priority.toLowerCase()] - priorityOrder[b.priority.toLowerCase()];
-  //       }
-  //       return sortOrder === 'asc' ? comparison : -comparison;
-  //     });
-  //   };
-
-  //   const filteredTickets = filterTickets();
-
-  const stats = {
-    total: tickets.length,
-    // open: tickets.filter(t => t.status === 'Open').length,
-    // inProgress: tickets.filter(t => t.status === 'In Progress').length,
-    // resolved: tickets.filter(t => t.status === 'Resolved').length
-  };
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedPriority, setSelectedPriority] = useState('all');
-  const [selectedStatus, setSelectedStatus] = useState('all');
+  const [selectedPriority, setSelectedPriority] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState('');
   const [sortBy, setSortBy] = useState('date');
   const [sortOrder, setSortOrder] = useState('desc');
+  useEffect(() => {
+    const fetchTickets = async () => {
+      const res = await getAssignedTicket(selectedStatus, selectedPriority)
+      setTickets(res)
+      console.log(res);
 
+    }
+    fetchTickets()
+  }, [selectedPriority, selectedStatus])
   return (
     <div className="flex-1 scrollbar-custom p-6">
       <style jsx>{`
@@ -262,11 +232,10 @@ const AssignedTickets = () => {
                   className="w-full px-4 py-2 bg-[#151b2e] border border-cyan-500/30 rounded-lg text-white focus:outline-none focus:border-cyan-400 transition-all"
                   style={{ fontFamily: 'Space Mono, monospace' }}
                 >
-                  <option value="all">All Priorities</option>
-                  <option value="critical">Critical</option>
-                  <option value="high">High</option>
-                  <option value="medium">Medium</option>
-                  <option value="low">Low</option>
+                  <option value="">All Priorities</option>
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
                 </select>
               </div>
 
@@ -281,11 +250,10 @@ const AssignedTickets = () => {
                   className="w-full px-4 py-2 bg-[#151b2e] border border-cyan-500/30 rounded-lg text-white focus:outline-none focus:border-cyan-400 transition-all"
                   style={{ fontFamily: 'Space Mono, monospace' }}
                 >
-                  <option value="all">All Statuses</option>
-                  <option value="open">Open</option>
-                  <option value="in progress">In Progress</option>
-                  <option value="resolved">Resolved</option>
-                  <option value="scheduled">Scheduled</option>
+                  <option value="">All Statuses</option>
+                  <option value="Open">Open</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Closed">Closed</option>
                 </select>
               </div>
 
@@ -317,26 +285,26 @@ const AssignedTickets = () => {
 
           {/* Active Filters Summary */}
           <div className="mt-4 flex items-center gap-2 flex-wrap">
-            {searchQuery && (
+            {/* {searchQuery && (
               <span className="px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded-full text-sm flex items-center gap-2" style={{ fontFamily: 'Space Mono, monospace' }}>
                 Search: {searchQuery}
                 <button onClick={() => setSearchQuery('')} className="hover:text-cyan-300">
                   <X size={14} />
                 </button>
               </span>
-            )}
-            {selectedPriority !== 'all' && (
+            )} */}
+            {selectedPriority !== '' && (
               <span className="px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded-full text-sm flex items-center gap-2" style={{ fontFamily: 'Space Mono, monospace' }}>
                 Priority: {selectedPriority}
-                <button onClick={() => setSelectedPriority('all')} className="hover:text-cyan-300">
+                <button onClick={() => setSelectedPriority('')} className="hover:text-cyan-300">
                   <X size={14} />
                 </button>
               </span>
             )}
-            {selectedStatus !== 'all' && (
+            {selectedStatus !== '' && (
               <span className="px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded-full text-sm flex items-center gap-2" style={{ fontFamily: 'Space Mono, monospace' }}>
                 Status: {selectedStatus}
-                <button onClick={() => setSelectedStatus('all')} className="hover:text-cyan-300">
+                <button onClick={() => setSelectedStatus('')} className="hover:text-cyan-300">
                   <X size={14} />
                 </button>
               </span>
@@ -349,9 +317,9 @@ const AssignedTickets = () => {
           {/* <p className="text-gray-400" style={{ fontFamily: 'Space Mono, monospace' }}>
             Showing <span className="text-cyan-400 font-semibold">{filteredTickets.length}</span> of <span className="text-white font-semibold">{tickets.length}</span> tickets
           </p> */}
-          <button 
-          onClick={()=>exportTickets('me')}
-          className="text-cyan-400 hover:text-cyan-300 flex items-center gap-2 text-sm" style={{ fontFamily: 'Space Mono, monospace' }}>
+          <button
+            onClick={() => exportTickets('me')}
+            className="text-cyan-400 hover:text-cyan-300 flex items-center gap-2 text-sm" style={{ fontFamily: 'Space Mono, monospace' }}>
             <Download size={16} />
             Export Results
           </button>
@@ -468,7 +436,7 @@ const AssignedTickets = () => {
 
         {/* Modal for Ticket Details */}
         {selectedTicket && (
-          <TicketUpdateView ticket={selectedTicket}  onClose={() => setSelectedTicket(null)} />
+          <TicketUpdateView ticket={selectedTicket} onClose={() => setSelectedTicket(null)} />
         )}
       </div>
     </div>

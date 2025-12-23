@@ -26,8 +26,8 @@ import TicketView from '../components/TicketView';
 
 const tickets = () => {
   const [selectedFilter, setSelectedFilter] = useState('all');
-  const [selectedPriority, setSelectedPriority] = useState('all');
-  const [selectedStatus, setSelectedStatus] = useState('all');
+  const [selectedPriority, setSelectedPriority] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState('');
   const [sortBy, setSortBy] = useState('date');
   const [sortOrder, setSortOrder] = useState('desc');
   const [searchQuery, setSearchQuery] = useState('');
@@ -54,16 +54,6 @@ const tickets = () => {
   //     tags: ['Network', 'Outage', 'P1']
   //   },
   // ];
-
-  useEffect(() => {
-    const fetchAllTickets = async () => {
-      const res = await getAllTickets();
-      console.log(res);
-
-      setTickets(res)
-    }
-    fetchAllTickets()
-  }, [])
   const getPriorityColor = (priority) => {
     switch (priority) {
       case 'critical': return 'text-red-500 bg-red-500/10 border-red-500/30';
@@ -98,27 +88,14 @@ const tickets = () => {
     }
   };
 
-  // const filterTickets = () => {
-  //   return tickets.filter(ticket => {
-  //     const matchesSearch = ticket.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //                          ticket.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //                          ticket.category.toLowerCase().includes(searchQuery.toLowerCase());
+  useEffect(() => {
+    const fetchTickets = async () => {
+      const res = await getAllTickets(100,selectedStatus, selectedPriority)
+      setTickets(res)
 
-  //     const matchesPriority = selectedPriority === 'all' || ticket.priority.toLowerCase() === selectedPriority.toLowerCase();
-  //     const matchesStatus = selectedStatus === 'all' || ticket.status.toLowerCase() === selectedStatus.toLowerCase();
-
-  //     return matchesSearch && matchesPriority && matchesStatus;
-  //   }).sort((a, b) => {
-  //     let comparison = 0;
-  //     if (sortBy === 'date') {
-  //       comparison = new Date(a.created) - new Date(b.created);
-  //     } else if (sortBy === 'priority') {
-  //       const priorityOrder = { critical: 0, high: 1, medium: 2, low: 3 };
-  //       comparison = priorityOrder[a.priority.toLowerCase()] - priorityOrder[b.priority.toLowerCase()];
-  //     }
-  //     return sortOrder === 'asc' ? comparison : -comparison;
-  //   });
-  // };
+    }
+    fetchTickets()
+  }, [selectedPriority, selectedStatus])
 
   // const filteredTickets = filterTickets();
 
@@ -262,11 +239,10 @@ const tickets = () => {
                   className="w-full px-4 py-2 bg-[#151b2e] border border-cyan-500/30 rounded-lg text-white focus:outline-none focus:border-cyan-400 transition-all"
                   style={{ fontFamily: 'Space Mono, monospace' }}
                 >
-                  <option value="all">All Priorities</option>
-                  <option value="critical">Critical</option>
-                  <option value="high">High</option>
-                  <option value="medium">Medium</option>
-                  <option value="low">Low</option>
+                  <option value="">All Priorities</option>
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
                 </select>
               </div>
 
@@ -281,11 +257,10 @@ const tickets = () => {
                   className="w-full px-4 py-2 bg-[#151b2e] border border-cyan-500/30 rounded-lg text-white focus:outline-none focus:border-cyan-400 transition-all"
                   style={{ fontFamily: 'Space Mono, monospace' }}
                 >
-                  <option value="all">All Statuses</option>
+                  <option value="">All Statuses</option>
                   <option value="Open">Open</option>
                   <option value="In Progress">In Progress</option>
                   <option value="Closed">Closed</option>
-                  <option value="scheduled">Scheduled</option>
                 </select>
               </div>
 
@@ -325,18 +300,18 @@ const tickets = () => {
                 </button>
               </span>
             )}
-            {selectedPriority !== 'all' && (
+            {selectedPriority && (
               <span className="px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded-full text-sm flex items-center gap-2" style={{ fontFamily: 'Space Mono, monospace' }}>
                 Priority: {selectedPriority}
-                <button onClick={() => setSelectedPriority('all')} className="hover:text-cyan-300">
+                <button onClick={() => setSelectedPriority('')} className="hover:text-cyan-300">
                   <X size={14} />
                 </button>
               </span>
             )}
-            {selectedStatus !== 'all' && (
+            {selectedStatus && (
               <span className="px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded-full text-sm flex items-center gap-2" style={{ fontFamily: 'Space Mono, monospace' }}>
                 Status: {selectedStatus}
-                <button onClick={() => setSelectedStatus('all')} className="hover:text-cyan-300">
+                <button onClick={() => setSelectedStatus('')} className="hover:text-cyan-300">
                   <X size={14} />
                 </button>
               </span>

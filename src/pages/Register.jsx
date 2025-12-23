@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { AlertCircle, CheckCircle2, Server, Shield, Network } from 'lucide-react';
 import { Link } from 'react-router';
+import { register } from '../api/user';
+import { toast } from 'react-toastify';
 
-const Register = ({ onSwitchToLogin }) => {
+const Register = () => {
   const [formData, setFormData] = useState({
-    fullName: '',
+    full_name: '',
     email: '',
     password: '',
     confirmPassword: '',
-    department: '',
-    employeeId: '',
+    emp_id: '',
+    username:'',
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -37,8 +39,11 @@ const Register = ({ onSwitchToLogin }) => {
   const validateForm = () => {
     const newErrors = {};
     
-    if (!formData.fullName) {
-      newErrors.fullName = 'Full name is required';
+    if (!formData.full_name) {
+      newErrors.full_name = 'Full name is required';
+    }
+    if (!formData.username) {
+      newErrors.username = 'User name is required';
     }
     
     if (!formData.email) {
@@ -59,12 +64,12 @@ const Register = ({ onSwitchToLogin }) => {
       newErrors.confirmPassword = 'Passwords do not match';
     }
     
-    if (!formData.department) {
-      newErrors.department = 'Department is required';
-    }
+    // if (!formData.department) {
+    //   newErrors.department = 'Department is required';
+    // }
     
-    if (!formData.employeeId) {
-      newErrors.employeeId = 'Employee ID is required';
+    if (!formData.emp_id) {
+      newErrors.emp_id = 'Employee ID is required';
     }
     
     return newErrors;
@@ -78,15 +83,21 @@ const Register = ({ onSwitchToLogin }) => {
       setErrors(newErrors);
       return;
     }
-
-    setIsLoading(true);
+    console.log(formData);
     
-    // Simulate API call
-    setTimeout(() => {
-      console.log('Registration submitted:', formData);
-      setIsLoading(false);
-      // Handle successful registration here
-    }, 2000);
+    setIsLoading(true);
+    try{
+      const res = await register(formData);
+      if(res.status == 201){
+        toast.success("Request Sent!");
+      }
+      console.log(res.data);
+      
+    }
+    catch{
+      toast.error("Some Error Occured!")
+    }
+    setIsLoading(false);
   };
 
   const getStrengthColor = () => {
@@ -230,17 +241,17 @@ const Register = ({ onSwitchToLogin }) => {
                 </label>
                 <input
                   type="text"
-                  name="fullName"
-                  value={formData.fullName}
+                  name="full_name"
+                  value={formData.full_name}
                   onChange={handleChange}
                   className="w-full px-4 py-3 bg-[#151b2e] border border-cyan-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-all duration-300"
                   style={{ fontFamily: 'Space Mono, monospace' }}
                   placeholder="John Smith"
                 />
-                {errors.fullName && (
+                {errors.full_name && (
                   <div className="flex items-center gap-2 mt-2 text-red-400 text-sm">
                     <AlertCircle size={14} />
-                    <span style={{ fontFamily: 'Space Mono, monospace' }}>{errors.fullName}</span>
+                    <span style={{ fontFamily: 'Space Mono, monospace' }}>{errors.full_name}</span>
                   </div>
                 )}
               </div>
@@ -248,21 +259,41 @@ const Register = ({ onSwitchToLogin }) => {
               {/* Employee ID */}
               <div className="animate-slide-up" style={{ animationDelay: '0.15s' }}>
                 <label className="block text-sm font-semibold text-gray-300 mb-2" style={{ fontFamily: 'Space Mono, monospace' }}>
-                  EMPLOYEE ID
+                  Username
                 </label>
                 <input
                   type="text"
-                  name="employeeId"
-                  value={formData.employeeId}
+                  name="username"
+                  value={formData.username}
                   onChange={handleChange}
                   className="w-full px-4 py-3 bg-[#151b2e] border border-cyan-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-all duration-300"
                   style={{ fontFamily: 'Space Mono, monospace' }}
                   placeholder="EMP-12345"
                 />
-                {errors.employeeId && (
+                {errors.emp_id && (
                   <div className="flex items-center gap-2 mt-2 text-red-400 text-sm">
                     <AlertCircle size={14} />
-                    <span style={{ fontFamily: 'Space Mono, monospace' }}>{errors.employeeId}</span>
+                    <span style={{ fontFamily: 'Space Mono, monospace' }}>{errors.emp_id}</span>
+                  </div>
+                )}
+              </div>
+              <div className="animate-slide-up" style={{ animationDelay: '0.15s' }}>
+                <label className="block text-sm font-semibold text-gray-300 mb-2" style={{ fontFamily: 'Space Mono, monospace' }}>
+                  EMPLOYEE ID
+                </label>
+                <input
+                  type="text"
+                  name="emp_id"
+                  value={formData.emp_id}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-[#151b2e] border border-cyan-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-all duration-300"
+                  style={{ fontFamily: 'Space Mono, monospace' }}
+                  placeholder="EMP-12345"
+                />
+                {errors.emp_id && (
+                  <div className="flex items-center gap-2 mt-2 text-red-400 text-sm">
+                    <AlertCircle size={14} />
+                    <span style={{ fontFamily: 'Space Mono, monospace' }}>{errors.emp_id}</span>
                   </div>
                 )}
               </div>
@@ -291,7 +322,7 @@ const Register = ({ onSwitchToLogin }) => {
             </div>
 
             {/* Department */}
-            <div className="animate-slide-up" style={{ animationDelay: '0.25s' }}>
+            {/* <div className="animate-slide-up" style={{ animationDelay: '0.25s' }}>
               <label className="block text-sm font-semibold text-gray-300 mb-2" style={{ fontFamily: 'Space Mono, monospace' }}>
                 DEPARTMENT
               </label>
@@ -316,7 +347,7 @@ const Register = ({ onSwitchToLogin }) => {
                   <span style={{ fontFamily: 'Space Mono, monospace' }}>{errors.department}</span>
                 </div>
               )}
-            </div>
+            </div> */}
 
             <div className="grid md:grid-cols-2 gap-5">
               {/* Password */}

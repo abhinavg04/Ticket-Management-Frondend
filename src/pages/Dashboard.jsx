@@ -1,5 +1,5 @@
-import { useState } from 'react';
-
+import { useEffect, useState } from 'react';
+import { getAllTickets } from '../api/ticket';
 import {
   Server,
   Activity,
@@ -20,68 +20,50 @@ import {
   X,
   ChevronRight
 } from 'lucide-react';
+import { getDashboardStats } from '../api/dashboard';
+import { Link } from 'react-router';
+import { useTheme } from '../context/ThemeContext';
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
+  const [stats,setStats] = useState({});
   // Sample data - replace with real API data
-  const stats = {
-    totalTickets: 1247,
-    openTickets: 342,
-    inProgress: 156,
-    resolved: 749,
-    avgResolutionTime: '4.2h',
-    criticalIssues: 23
-  };
+  // const stats = {
+  //   total_tickets: 1247,
+  //   open_tickets: 342,
+  //   in_progress_tickets: 156,
+  //   closed_tickets: 749,
+  //   avgResolutionTime: '4.2h',
+  //   critical_tickets: 23
+  // };
+  const [recentTickets,setrecentTickets] = useState([])
+  const fetchStats = async ()=>{
+    const res = await getDashboardStats();
+    setStats(res)
+    
+  }
+  const fetchRecentTickets = async ()=>{
+    const res = await getAllTickets(4)
+    setrecentTickets(res)
 
-
-  const recentTickets = [
-    {
-      id: 'TKT-2891',
-      title: 'Network Outage - Building A',
-      priority: 'Critical',
-      status: 'In Progress',
-      assignee: 'John Smith',
-      time: '15 min ago',
-      category: 'Infrastructure'
-    },
-    {
-      id: 'TKT-2890',
-      title: 'VPN Connection Issues',
-      priority: 'High',
-      status: 'Open',
-      assignee: 'Sarah Chen',
-      time: '1 hour ago',
-      category: 'Security'
-    },
-    {
-      id: 'TKT-2889',
-      title: 'Slow DNS Resolution',
-      priority: 'Medium',
-      status: 'In Progress',
-      assignee: 'Mike Johnson',
-      time: '2 hours ago',
-      category: 'DNS'
-    },
-    {
-      id: 'TKT-2888',
-      title: 'Firewall Rule Update',
-      priority: 'Low',
-      status: 'Resolved',
-      assignee: 'Emily Davis',
-      time: '3 hours ago',
-      category: 'Security'
-    },
-    {
-      id: 'TKT-2887',
-      title: 'Bandwidth Throttling Issue',
-      priority: 'High',
-      status: 'Open',
-      assignee: 'Tom Wilson',
-      time: '5 hours ago',
-      category: 'Performance'
-    }
-  ];
+  }
+  useEffect(()=>{
+    fetchStats()
+    fetchRecentTickets()
+    console.log(stats);
+  },[])
+  // const recentTickets = [
+  //   {
+  //     id: 'TKT-2891',
+  //     title: 'Network Outage - Building A',
+  //     priority: 'Critical',
+  //     status: 'In Progress',
+  //     reported_by: 'John Smith',
+  //     time: '15 min ago',
+  //     category: 'Infrastructure'
+  //   },
+  
+  // ];
 
   const categoryData = [
     { name: 'Infrastructure', count: 342, percentage: 27.4, color: 'bg-cyan-500' },
@@ -105,11 +87,11 @@ const Dashboard = () => {
     switch (status.toLowerCase()) {
       case 'open': return 'text-cyan-400 bg-cyan-500/10 border-cyan-500/30';
       case 'in progress': return 'text-yellow-400 bg-yellow-500/10 border-yellow-500/30';
-      case 'resolved': return 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30';
+      case 'closed_tickets': return 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30';
       default: return 'text-gray-400 bg-gray-500/10 border-gray-500/30';
     }
   };
-
+  const { theme } = useTheme();
   return (
     <div className="flex-1 overflow-y-auto scrollbar-custom p-6 space-y-6">
       {/* Stats Grid */}
@@ -122,8 +104,8 @@ const Dashboard = () => {
             </div>
             <TrendingUp size={20} className="text-emerald-400" />
           </div>
-          <h3 className="text-3xl font-bold text-white mb-1" style={{ fontFamily: 'Orbitron, sans-serif' }}>
-            {stats.totalTickets}
+          <h3 className={`text-3xl font-bold ${theme==='dark'?'text-white/80':''} mb-1`} style={{ fontFamily: 'Orbitron, sans-serif' }}>
+            {stats.total_tickets}
           </h3>
           <p className="text-sm text-gray-400" style={{ fontFamily: 'Space Mono, monospace' }}>
             Total Tickets
@@ -138,8 +120,8 @@ const Dashboard = () => {
             </div>
             <TrendingUp size={20} className="text-yellow-400" />
           </div>
-          <h3 className="text-3xl font-bold text-white mb-1" style={{ fontFamily: 'Orbitron, sans-serif' }}>
-            {stats.openTickets}
+          <h3 className={`text-3xl font-bold ${theme==='dark'?'text-white/80':''} mb-1`}  style={{ fontFamily: 'Orbitron, sans-serif' }}>
+            {stats.open_tickets}
           </h3>
           <p className="text-sm text-gray-400" style={{ fontFamily: 'Space Mono, monospace' }}>
             Open Tickets
@@ -154,15 +136,15 @@ const Dashboard = () => {
             </div>
             <TrendingDown size={20} className="text-red-400" />
           </div>
-          <h3 className="text-3xl font-bold text-white mb-1" style={{ fontFamily: 'Orbitron, sans-serif' }}>
-            {stats.inProgress}
+          <h3 className={`text-3xl font-bold ${theme==='dark'?'text-white/80':''} mb-1`}  style={{ fontFamily: 'Orbitron, sans-serif' }}>
+            {stats.in_progress_tickets}
           </h3>
           <p className="text-sm text-gray-400" style={{ fontFamily: 'Space Mono, monospace' }}>
             In Progress
           </p>
         </div>
 
-        {/* Resolved */}
+        {/* closed_tickets */}
         <div className="stat-card rounded-xl p-6 animate-slide-in-up" style={{ animationDelay: '0.25s' }}>
           <div className="flex items-start justify-between mb-4">
             <div className="p-3 rounded-lg bg-emerald-500/20">
@@ -170,11 +152,11 @@ const Dashboard = () => {
             </div>
             <TrendingUp size={20} className="text-emerald-400" />
           </div>
-          <h3 className="text-3xl font-bold text-white mb-1" style={{ fontFamily: 'Orbitron, sans-serif' }}>
-            {stats.resolved}
+          <h3 className={`text-3xl font-bold ${theme==='dark'?'text-white/80':''} mb-1`}  style={{ fontFamily: 'Orbitron, sans-serif' }}>
+            {stats.closed_tickets}
           </h3>
           <p className="text-sm text-gray-400" style={{ fontFamily: 'Space Mono, monospace' }}>
-            Resolved
+            closed_tickets
           </p>
         </div>
 
@@ -186,7 +168,7 @@ const Dashboard = () => {
             </div>
             <TrendingDown size={20} className="text-emerald-400" />
           </div>
-          <h3 className="text-3xl font-bold text-white mb-1" style={{ fontFamily: 'Orbitron, sans-serif' }}>
+          <h3 className={`text-3xl font-bold ${theme==='dark'?'text-white/80':''} mb-1`}  style={{ fontFamily: 'Orbitron, sans-serif' }}>
             {stats.avgResolutionTime}
           </h3>
           <p className="text-sm text-gray-400" style={{ fontFamily: 'Space Mono, monospace' }}>
@@ -202,8 +184,8 @@ const Dashboard = () => {
             </div>
             <TrendingUp size={20} className="text-red-400" />
           </div>
-          <h3 className="text-3xl font-bold text-white mb-1" style={{ fontFamily: 'Orbitron, sans-serif' }}>
-            {stats.criticalIssues}
+          <h3 className={`text-3xl font-bold ${theme==='dark'?'text-white/80':''} mb-1`}  style={{ fontFamily: 'Orbitron, sans-serif' }}>
+            {stats.critical_tickets}
           </h3>
           <p className="text-sm text-gray-400" style={{ fontFamily: 'Space Mono, monospace' }}>
             Critical Issues
@@ -214,28 +196,30 @@ const Dashboard = () => {
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Tickets */}
-        <div className="lg:col-span-2 bg-[#0d1425]/80 backdrop-blur-xl border border-cyan-500/20 rounded-xl p-6 animate-slide-in-up" style={{ animationDelay: '0.4s' }}>
+        <div className={`lg:col-span-2 ${theme==='dark'?'bg-[#0d1425]'/80:''} backdrop-blur-xl border border-cyan-500/20 rounded-xl p-6 animate-slide-in-up`} style={{ animationDelay: '0.4s' }}>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-white" style={{ fontFamily: 'Orbitron, sans-serif' }}>
+            <h2 className={`text-xl font-bold ${theme==='dark'?'text-white'/80:''} `} style={{ fontFamily: 'Orbitron, sans-serif' }}>
               Recent Tickets
             </h2>
-            <button className="text-cyan-400 hover:text-cyan-300 text-sm flex items-center gap-1" style={{ fontFamily: 'Space Mono, monospace' }}>
+            <Link
+            to={'/dashboard/all-tickets'} 
+            className="text-cyan-400 hover:text-cyan-300 text-sm flex items-center gap-1" style={{ fontFamily: 'Space Mono, monospace' }}>
               View All <ChevronRight size={16} />
-            </button>
+            </Link>
           </div>
 
           <div className="space-y-3">
             {recentTickets.map((ticket, index) => (
               <div
                 key={ticket.id}
-                className="ticket-row p-4 rounded-lg bg-[#151b2e] border border-cyan-500/20"
+                className={`ticket-row p-4 rounded-lg ${theme==='dark'?'bg-[#151b2e]'/80:''} border border-cyan-500/20`}
                 style={{ animationDelay: `${0.45 + index * 0.05}s` }}
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <span className="text-cyan-400 font-semibold" style={{ fontFamily: 'Space Mono, monospace' }}>
-                        {ticket.id}
+                        {ticket.ticket_id}
                       </span>
                       <span className={`px-2 py-1 rounded text-xs font-semibold border ${getPriorityColor(ticket.priority)}`} style={{ fontFamily: 'Space Mono, monospace' }}>
                         {ticket.priority}
@@ -244,17 +228,18 @@ const Dashboard = () => {
                         {ticket.status}
                       </span>
                     </div>
-                    <h3 className="text-white font-semibold mb-2" style={{ fontFamily: 'Space Mono, monospace' }}>
-                      {ticket.title}
-                    </h3>
+                    {/* Description */}
+                  <p className="text-gray-400 text-sm mb-3 line-clamp-2" style={{ fontFamily: 'Space Mono, monospace' }}>
+                    {ticket.issue_description}
+                  </p>
                     <div className="flex items-center gap-4 text-sm text-gray-400" style={{ fontFamily: 'Space Mono, monospace' }}>
                       <span className="flex items-center gap-1">
                         <Users size={14} />
-                        {ticket.assignee}
+                        {ticket.reported_by}
                       </span>
                       <span className="flex items-center gap-1">
                         <Clock size={14} />
-                        {ticket.time}
+                        {ticket.date_reported}
                       </span>
                       <span className="px-2 py-0.5 bg-cyan-500/10 text-cyan-400 rounded text-xs">
                         {ticket.category}
@@ -271,8 +256,8 @@ const Dashboard = () => {
         </div>
 
         {/* Category Distribution */}
-        <div className="bg-[#0d1425]/80 backdrop-blur-xl border border-cyan-500/20 rounded-xl p-6 animate-slide-in-up" style={{ animationDelay: '0.45s' }}>
-          <h2 className="text-xl font-bold text-white mb-6" style={{ fontFamily: 'Orbitron, sans-serif' }}>
+        <div className={`${theme==='dark'?'bg-[#0d1425]/80'/80:''} backdrop-blur-xl border border-cyan-500/20 rounded-xl p-6 animate-slide-in-up`} style={{ animationDelay: '0.45s' }}>
+          <h2 className={`text-xl font-bold ${theme==='dark'?'text-white'/80:''} mb-6`} style={{ fontFamily: 'Orbitron, sans-serif' }}>
             Tickets by Category
           </h2>
 
