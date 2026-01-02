@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { AlertCircle, CheckCircle2, Server, Shield, Network } from 'lucide-react';
 import { Link } from 'react-router';
 import { register } from '../api/user';
@@ -268,7 +268,7 @@ const Register = () => {
                   onChange={handleChange}
                   className="w-full px-4 py-3 bg-[#151b2e] border border-cyan-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-all duration-300"
                   style={{ fontFamily: 'Space Mono, monospace' }}
-                  placeholder="EMP-12345"
+                  placeholder="username"
                 />
                 {errors.emp_id && (
                   <div className="flex items-center gap-2 mt-2 text-red-400 text-sm">

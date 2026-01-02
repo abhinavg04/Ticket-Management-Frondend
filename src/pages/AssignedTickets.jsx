@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  Server,
-  Search,
   Filter,
   Download,
-  Plus,
   X,
   Calendar,
   User,
@@ -16,17 +13,15 @@ import {
   ChevronUp,
   Eye,
   Edit,
-  MessageSquare,
   Paperclip,
   TrendingUp,
   MoreHorizontal
 } from 'lucide-react';
 import { exportTickets, getAssignedTicket } from '../api/ticket';
-import TicketView from '../components/TicketView';
 import TicketUpdateView from '../components/TicketUpdateView';
+import { useTheme } from '../context/ThemeContext';
 
 const AssignedTickets = () => {
-  const [selectedFilter, setSelectedFilter] = useState('all');
   const [selectedTicket, setSelectedTicket] = useState(null);
 
   const [tickets, setTickets] = useState([]);
@@ -102,6 +97,7 @@ const AssignedTickets = () => {
     }
     fetchTickets()
   }, [selectedPriority, selectedStatus])
+  const { theme } = useTheme();
   return (
     <div className="flex-1 scrollbar-custom p-6">
       <style jsx>{`
@@ -210,7 +206,7 @@ const AssignedTickets = () => {
             </div>
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="filter-button px-6 py-3 bg-[#151b2e] border border-cyan-500/30 rounded-lg text-gray-300 hover:text-cyan-400 flex items-center gap-2"
+              className={`filter-button px-6 py-3 ${theme==='dark'?'bg-[#151b2e] text-white':''} border border-cyan-500/30 rounded-lg text-gray-300 hover:text-cyan-400 flex items-center gap-2`}
               style={{ fontFamily: 'Space Mono, monospace' }}
             >
               <Filter size={20} />
@@ -229,7 +225,7 @@ const AssignedTickets = () => {
                 <select
                   value={selectedPriority}
                   onChange={(e) => setSelectedPriority(e.target.value)}
-                  className="w-full px-4 py-2 bg-[#151b2e] border border-cyan-500/30 rounded-lg text-white focus:outline-none focus:border-cyan-400 transition-all"
+                  className={`w-full px-4 py-2 ${theme==='dark'?'bg-[#151b2e] text-white':''} border border-cyan-500/30 rounded-lg focus:outline-none focus:border-cyan-400 transition-all`}
                   style={{ fontFamily: 'Space Mono, monospace' }}
                 >
                   <option value="">All Priorities</option>
@@ -247,7 +243,7 @@ const AssignedTickets = () => {
                 <select
                   value={selectedStatus}
                   onChange={(e) => setSelectedStatus(e.target.value)}
-                  className="w-full px-4 py-2 bg-[#151b2e] border border-cyan-500/30 rounded-lg text-white focus:outline-none focus:border-cyan-400 transition-all"
+                  className={`w-full px-4 py-2 ${theme==='dark'?'bg-[#151b2e] text-white':''} border border-cyan-500/30 rounded-lg focus:outline-none focus:border-cyan-400 transition-all`}
                   style={{ fontFamily: 'Space Mono, monospace' }}
                 >
                   <option value="">All Statuses</option>
@@ -266,7 +262,7 @@ const AssignedTickets = () => {
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="flex-1 px-4 py-2 bg-[#151b2e] border border-cyan-500/30 rounded-lg text-white focus:outline-none focus:border-cyan-400 transition-all"
+                    className={`flex-1 px-4 py-2 ${theme === 'dark'?'bg-[#151b2e] text-white':''} border border-cyan-500/30 rounded-lg focus:outline-none focus:border-cyan-400 transition-all`}
                     style={{ fontFamily: 'Space Mono, monospace' }}
                   >
                     <option value="date">Date</option>

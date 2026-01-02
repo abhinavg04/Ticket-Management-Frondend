@@ -13,7 +13,6 @@ const Login = () => {
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setuserData(prev => ({ ...prev, [name]: value }));
@@ -44,7 +43,6 @@ const Login = () => {
 
     setIsLoading(true);
     const formData = new FormData()
-    console.log(userData)
     formData.append('username', userData.username)
     formData.append('password', userData.password)
     try {

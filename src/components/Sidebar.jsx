@@ -12,7 +12,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useUser } from '../context/UserContext';
 
 
-function Sidebar() {
+function Sidebar({ isSidebarOpen }) {
     const { theme } = useTheme()
     const { user } = useUser()
     const navItemClass = ({ isActive }) =>
@@ -31,7 +31,8 @@ function Sidebar() {
 
     return (
         < aside
-            className={` fixed left-0 top-0 h-screen w-72
+            className={`${isSidebarOpen ? 'w-72' : 'w-24'
+                } fixed left-0 top-0 h-screen
                 ${theme === 'dark' ? 'bg-[#0d1425]' : ''}
                 border-r border-cyan-500/20
                 transition-all duration-300
@@ -39,7 +40,7 @@ function Sidebar() {
             }
         >
             <div className="h-full flex flex-col p-6">
-                <Logo />
+                <Logo isSidebarOpen={isSidebarOpen} />
 
                 {/* Navigation */}
                 <nav className="flex-1 space-y-2">
@@ -50,7 +51,7 @@ function Sidebar() {
                         style={{ fontFamily: 'Space Mono, monospace', animationDelay: '0.1s', }}
                     >
                         <Home size={20} />
-                        <span>Overview</span>
+                        {isSidebarOpen && <span>Overview</span>}
                     </NavLink>
                     {
                         ["admin"].includes(user.role) && (
@@ -61,10 +62,7 @@ function Sidebar() {
                                 style={{ fontFamily: 'Space Mono, monospace', animationDelay: '0.2s' }}
                             >
                                 <FileText size={20} />
-                                <span>All Tickets</span>
-                                <span className="ml-auto bg-cyan-500/20 text-cyan-400 px-2 py-0.5 rounded text-xs">
-                                    {stats.totalTickets}
-                                </span>
+                                {isSidebarOpen && <span>All Tickets</span>}
                             </NavLink>
                         )
                     }
@@ -91,7 +89,7 @@ function Sidebar() {
                         style={{ fontFamily: 'Space Mono, monospace', animationDelay: '0.2s' }}
                     >
                         <Plus size={20} />
-                        Create Ticket
+                        {isSidebarOpen && <span>Create Ticket</span>}
                     </NavLink>
                     <NavLink
                         to={'/dashboard/assigned-tickets'}
@@ -100,7 +98,7 @@ function Sidebar() {
                         style={{ fontFamily: 'Space Mono, monospace', animationDelay: '0.3s' }}
                     >
                         <BarChart3 size={20} />
-                        <span>Assigned Tickets</span>
+                        {isSidebarOpen && <span>Assigned Tickets</span>}
                     </NavLink>
                     {/* <NavLink
                         className={navItemClass}
@@ -118,7 +116,7 @@ function Sidebar() {
                             style={{ fontFamily: 'Space Mono, monospace', animationDelay: '0.5s' }}
                         >
                             <Users size={20} />
-                            <span>users</span>
+                            {isSidebarOpen && <span>Manage Users</span>}
                         </NavLink>)
                     }
                     {/*
@@ -136,7 +134,7 @@ function Sidebar() {
                 </nav>
 
                 {/* User Profile */}
-                <UserProfile />
+                <UserProfile isSidebarOpen={isSidebarOpen} />
             </div >
         </aside >
     )

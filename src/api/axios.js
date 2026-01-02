@@ -1,8 +1,8 @@
 import axios from "axios";
-import { useNavigate } from "react-router";
+const BASE_URL = import.meta.env.VITE_DEPLOY_URL  
 
 const api = axios.create({
-  baseURL: "http://127.0.0.1:8000",
+  baseURL: BASE_URL,
 });
 
 api.interceptors.request.use((config) => {

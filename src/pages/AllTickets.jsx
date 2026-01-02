@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  Server,
-  Search,
   Filter,
   Download,
-  Plus,
   X,
   Calendar,
   User,
@@ -16,7 +13,6 @@ import {
   ChevronUp,
   Eye,
   Edit,
-  MessageSquare,
   Paperclip,
   TrendingUp,
   MoreHorizontal
@@ -25,7 +21,6 @@ import { exportTickets, getAllTickets } from '../api/ticket';
 import TicketView from '../components/TicketView';
 
 const tickets = () => {
-  const [selectedFilter, setSelectedFilter] = useState('all');
   const [selectedPriority, setSelectedPriority] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
   const [sortBy, setSortBy] = useState('date');
@@ -161,7 +156,7 @@ const tickets = () => {
         }
 
         .filter-button.active {
-          background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(16, 185, 129, 0.2));
+          background: linear-linear(135deg, rgba(6, 182, 212, 0.2), rgba(16, 185, 129, 0.2));
           border-color: #06b6d4;
         }
 
@@ -192,8 +187,8 @@ const tickets = () => {
       <div className="fixed inset-0 opacity-10 pointer-events-none">
         <div className="absolute inset-0" style={{
           backgroundImage: `
-            linear-gradient(rgba(0, 255, 157, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 255, 157, 0.1) 1px, transparent 1px)
+            linear-linear(rgba(0, 255, 157, 0.1) 1px, transparent 1px),
+            linear-linear(90deg, rgba(0, 255, 157, 0.1) 1px, transparent 1px)
           `,
           backgroundSize: '50px 50px',
           animation: 'grid-move 20s linear infinite'
@@ -205,7 +200,7 @@ const tickets = () => {
         <div className="mb-8 animate-slide-in-up">
           <div className="flex items-center justify-between gap-4 mb-2">
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent" style={{ fontFamily: 'Orbitron, sans-serif' }}>
+              <h1 className="text-4xl font-bold bg-linear-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent" style={{ fontFamily: 'Orbitron, sans-serif' }}>
                 TICKETS MANAGEMENT
               </h1>
               <p className="text-gray-400 mt-1" style={{ fontFamily: 'Space Mono, monospace' }}>
@@ -215,7 +210,7 @@ const tickets = () => {
             {/* Filter Toggle */}
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="filter-button px-6 py-3 bg-[#151b2e] border border-cyan-500/30 rounded-lg text-gray-300 hover:text-cyan-400 flex items-center gap-2"
+              className="filter-button px-6 py-3 dark:bg-[#151b2e] border border-cyan-500/30 rounded-lg text-gray-300 hover:text-cyan-400 flex items-center gap-2"
               style={{ fontFamily: 'Space Mono, monospace' }}
             >
               <Filter size={20} />

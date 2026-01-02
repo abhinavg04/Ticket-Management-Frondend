@@ -9,15 +9,10 @@ import {
   TrendingUp,
   TrendingDown,
   Users,
-  Bell,
-  Search,
-  Filter,
   MoreVertical,
   Wifi,
   Shield,
   FileText,
-  Menu,
-  X,
   ChevronRight
 } from 'lucide-react';
 import { getDashboardStats } from '../api/dashboard';
@@ -25,7 +20,6 @@ import { Link } from 'react-router';
 import { useTheme } from '../context/ThemeContext';
 
 const Dashboard = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [stats,setStats] = useState({});
   // Sample data - replace with real API data
   // const stats = {
