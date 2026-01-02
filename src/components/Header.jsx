@@ -10,9 +10,8 @@ import {
     Moon
 } from 'lucide-react';
 
-function Header() {
+function Header({ toggleSidebar,isSidebarOpen}) {
     const { theme, toggleTheme } = useTheme();
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true)
     const [searchQuery,setSearchQuery] = useState('')
     useEffect(()=>{
         console.log(searchQuery);
@@ -21,7 +20,7 @@ function Header() {
     return (
         <header className={`${theme==='dark'?'bg-[#0d1425]/80':''}backdrop-blur-xl border-b border-cyan-500/20 px-6 py-4 flex items-center gap-4 relative z-10`}>
             <button
-                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                onClick={toggleSidebar}
                 className=" text-gray-400 hover:text-cyan-400 transition-colors"
             >
                 {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}

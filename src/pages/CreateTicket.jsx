@@ -1,18 +1,15 @@
 import { useEffect, useState } from "react";
 import {
-  Plus,
   User,
   AlertCircle,
-  FileText,
-  Calendar,
   Layers,
   Send,
   X
 } from "lucide-react";
 import { createTicket } from "../api/ticket";
 import { getAllUser } from "../api/user";
-import { useUser } from "../context/UserContext";
 import { toast } from "react-toastify";
+import { useTheme } from "../context/ThemeContext";
 
 const CreateTicket = () => {
   const [formData, setFormData] = useState({
@@ -55,7 +52,6 @@ console.log(users)
   const handleSubmit = async (e) => {
     e.preventDefault();
     try{
-        console.log(formData);
         
         const res = await createTicket(formData);
         toast.success(`Ticket ${res.ticket_id} Created Successfully`)
@@ -64,9 +60,9 @@ console.log(users)
       toast.error("Some Error Occured")
     }
   };
-
+  const { theme } = useTheme();
   return (
-    <div className="min-h-screen bg-[#0a0e1a] p-6">
+    <div className={`min-h-screen ${theme==='dark'?'bg-[#0a0e1a]':''} p-6`}>
       <div className="max-w-4xl mx-auto">
 
         {/* Header */}
@@ -88,7 +84,7 @@ console.log(users)
         {/* Form Card */}
         <form
           onSubmit={handleSubmit}
-          className="bg-[#0d1425]/80 backdrop-blur-xl border border-cyan-500/20 rounded-2xl p-8 space-y-6"
+          className={`${theme==='dark'?'bg-[#0d1425]/80 ':''} backdrop-blur-xl border border-cyan-500/20 rounded-2xl p-8 space-y-6`}
         >
 
           {/* Title */}
@@ -103,7 +99,7 @@ console.log(users)
               value={formData.title}
               onChange={handleChange}
               placeholder="Eg: WiFi connectivity issue in 3rd floor"
-              className="w-full px-4 py-3 bg-[#151b2e] border border-cyan-500/30 rounded-lg text-white focus:outline-none focus:border-cyan-400"
+              className={`w-full px-4 py-3 ${theme==='dark'?'bg-[#151b2e] text-white':''} border border-cyan-500/30 rounded-lg text-white`}focus:outline-none focus:border-cyan-400"
               style={{ fontFamily: "Space Mono, monospace" }}
             />
           </div> */}
@@ -120,7 +116,7 @@ console.log(users)
               value={formData.issue_description}
               onChange={handleChange}
               placeholder="Describe the issue in detail..."
-              className="w-full px-4 py-3 bg-[#151b2e] border border-cyan-500/30 rounded-lg text-white focus:outline-none focus:border-cyan-400"
+              className={`w-full px-4 py-3 ${theme==='dark'?'bg-[#151b2e] text-white':''} border border-cyan-500/30 rounded-lg focus:outline-none focus:border-cyan-400`}
               style={{ fontFamily: "Space Mono, monospace" }}
             />
           </div>
@@ -137,7 +133,7 @@ console.log(users)
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-[#151b2e] border border-cyan-500/30 rounded-lg text-white"
+                className={`w-full px-4 py-3 ${theme==='dark'?'bg-[#151b2e] text-white':''} border border-cyan-500/30 rounded-lg`}
                 style={{ fontFamily: "Space Mono, monospace" }}
               >
                 <option value="">Select Category</option>
@@ -158,7 +154,7 @@ console.log(users)
                 name="priority"
                 value={formData.priority}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-[#151b2e] border border-cyan-500/30 rounded-lg text-white"
+                className={`w-full px-4 py-3 ${theme==='dark'?'bg-[#151b2e] text-white':''} border border-cyan-500/30 rounded-lg `}
                 style={{ fontFamily: "Space Mono, monospace" }}
               >
                 <option>Low</option>
@@ -176,7 +172,7 @@ console.log(users)
                 name="assigned_to_id"
                 value={formData.assigned_to_id}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-[#151b2e] border border-cyan-500/30 rounded-lg text-white"
+                className={`w-full px-4 py-3 ${theme==='dark'?'bg-[#151b2e] text-white':''} border border-cyan-500/30 rounded-lg`}
                 style={{ fontFamily: "Space Mono, monospace" }}
               >
                 <option value="">Select User</option>
@@ -198,7 +194,7 @@ console.log(users)
                 name="due_date"
                 value={formData.due_date}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-[#151b2e] border border-cyan-500/30 rounded-lg text-white"
+                className={`w-full px-4 py-3 ${theme==='dark'?'bg-[#151b2e] text-white':''} border border-cyan-500/30 rounded-lg text-white`}
                 style={{ fontFamily: "Space Mono, monospace" }}
               />
             </div> */}
@@ -210,7 +206,7 @@ console.log(users)
             <button
             onClick={clearForm}
               type="button"
-              className="px-6 py-3 bg-[#151b2e] border border-cyan-500/30 text-gray-400 rounded-lg hover:border-cyan-400"
+              className={`px-6 py-3 ${theme==='dark'?'bg-[#151b2e] text-white':''} border border-cyan-500/30 text-gray-400 rounded-lg hover:border-cyan-400`}
             >
               <X size={18} />
             </button>
